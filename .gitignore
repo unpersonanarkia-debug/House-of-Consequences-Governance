@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editorit
+.vscode/
+.idea/
+
+# Node / frontend tooling (jos tulee)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build / export
+dist/
+build/
+*.pdf
+
+# Ympäristö
+.env
+.env.local
+.env.production
+
+# Lokit
+*.log
