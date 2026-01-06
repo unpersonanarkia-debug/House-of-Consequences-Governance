@@ -45,41 +45,5 @@ House-of-Consequences/
 │   ├─ ARCHITECTURE.md         # Rakenteet ja komponentit
 │   ├─ INTERPRETATION.md       # Tulkintaohjeet
 │   └─ GOVERNANCE.md           # Mallin käyttöperiaatteet
-├─ LICENSE
-└─ README.md
-
-
-## Käyttökohteita
-
-House of Consequences soveltuu erityisesti:
-- yritysten strategisten päätösten jälkianalyysiin
-- hallinnollisten prosessien läpinäkyvyyteen
-- riskienhallintaan ja vaikutusarviointiin
-- koulutus- ja tutkimuskäyttöön
-- eettisten ja organisatoristen kehien hahmottamiseen
-
-
-## Lisenssi
-
-Tämä projekti on julkaistu *MIT-lisenssillä*.  
-Lisenssi sallii vapaan käytön, muokkaamisen ja jatkokehityksen, myös kaupallisissa yhteyksissä.
-
-Huomio:  
-Mallin soveltaminen institutionaalisessa tai juridisessa päätöksenteossa edellyttää aina tapauskohtaista harkintaa.
-
-
-## Tila
-
-🔹 Tämä projekti on aktiivisessa kehitysvaiheessa  
-🔹 Rakenteellinen malli on vakaa  
-🔹 Käyttöliittymä on prototyyppitasolla  
-
-Jatkokehitys voi sisältää:
-- erilliset organisaatioversiot
-- arkistointirakenteet
-- lisensoidut käyttömallit
-- auditointi- ja raportointilaajennukset
-
-
-© 2026 House of Consequences  
+├─ LICENSEquences  
 Decision Lifecycle Framework
