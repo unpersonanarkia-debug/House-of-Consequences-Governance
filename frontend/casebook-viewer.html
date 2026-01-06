@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <title>House of Consequences – Casebook Viewer</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 2rem;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1, h2, h3 {
+      margin-top: 2rem;
+    }
+    .meta, .case, .path, .learning, .target {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .path {
+      border-left: 4px solid #444;
+    }
+    .target {
+      border-left: 4px solid #888;
+    }
+    label {
+      font-weight: bold;
+    }
+    .muted {
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>House of Consequences – Casebook Viewer</h1>
+
+<input type="file" id="fileInput" accept=".json" />
+
+<div id="content"></div>
+
+<script>
+  const fileInput = document.getElementById("fileInput");
+  const content = document.getElementById("content");
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        renderCasebook(data);
+      } catch (e) {
+        content.innerHTML = "<p>Virhe JSON-tiedoston lukemisessa.</p>";
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  function renderCasebook(cb) {
+    content.innerHTML = "";
+
+    content.appendChild(section("Instanssi", `
+      <p><label>ID:</label> ${cb.id}</p>
+      <p><label>Instanssi:</label> ${cb.instanssi}</p>
+      <p><label>Toimiala:</label> ${cb.toimiala}</p>
+      <p><label>Periodi:</label> ${cb.periodi}</p>
+      <p><label>Kuvaus:</label> ${cb.kuvaus}</p>
+    `));
+
+    content.appendChild(section("Lähteet", `
+      <ul>${cb.lähteet.map(l => `<li>${l}</li>`).join("")}</ul>
+    `));
+
+    cb.cases.forEach(c => {
+      const caseDiv = document.createElement("div");
+      caseDiv.className = "case";
+      caseDiv.innerHTML = `<h2>Case ${c.case_id}</h2>`;
+
+      c.paths.forEach((p, i) => {
+        const pathDiv = document.createElement("div");
+        pathDiv.className = "path";
+        pathDiv.innerHTML = `
+          <h3>Polku ${i + 1}</h3>
+          <p><label>Trigger:</label> ${p.trigger}</p>
+          <p><label>Tulkinta:</label> ${p.tulkinta}</p>
+          <p><label>Toimenpide:</label> ${p.toimenpide}</p>
+          <p><label>Seuraus:</label> ${p.seuraus}</p>
+          ${p.todennäköisyys !== undefined ? `<p class="muted">Todennäköisyys: ${p.todennäköisyys}</p>` : ""}
+          ${p.kesto_vuotta !== undefined ? `<p class="muted">Kesto (vuotta): ${p.kesto_vuotta}</p>` : ""}
+          ${p.hypoteesi ? `<p class="muted">Hypoteettinen polku</p>` : ""}
+        `;
+        caseDiv.appendChild(pathDiv);
+      });
+
+      const learning = document.createElement("div");
+      learning.className = "learning";
+      learning.innerHTML = `
+        <h3>Learning</h3>
+        <p><label>Plan:</label> ${c.learning.pdca.plan}</p>
+        <p><label>Do:</label> ${c.learning.pdca.do}</p>
+        <p><label>Check:</label> ${c.learning.pdca.check}</p>
+        <p><label>Act:</label> ${c.learning.pdca.act}</p>
+      `;
+
+      c.learning.targets.forEach(t => {
+        const tDiv = document.createElement("div");
+        tDiv.className = "target";
+        tDiv.innerHTML = `
+          <p><label>${t.id}</label> (${t.taso})</p>
+          <p>Toiminta: ${t.toiminta}</p>
+          <p>Mittaus: ${t.mittaus}</p>
+          <p>Kriteeri: ${t.kriteeri}</p>
+          <p class="muted">Status: ${t.status || "pending"}</p>
+        `;
+        learning.appendChild(tDiv);
+      });
+
+      caseDiv.appendChild(learning);
+      content.appendChild(caseDiv);
+    });
+  }
+
+  function section(title, inner) {
+    const div = document.createElement("div");
+    div.className = "meta";
+    div.innerHTML = `<h2>${title}</h2>${inner}`;
+    return div;
+  }
+</script>
+
+</body>
+</html>
