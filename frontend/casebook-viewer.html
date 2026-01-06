@@ -57,7 +57,19 @@
     reader.onload = () => {
       try {
         const data = JSON.parse(reader.result);
-        renderCasebook(data);
+
+validateCasebook(data).then(result => {
+  if (!result.valid) {
+    content.innerHTML = `
+      <h2>Schema-validointi epäonnistui</h2>
+      <pre>${JSON.stringify(result.errors, null, 2)}</pre>
+    `;
+    return;
+  }
+
+  renderCasebook(data);
+});
+
       } catch (e) {
         content.innerHTML = "<p>Virhe JSON-tiedoston lukemisessa.</p>";
       }
