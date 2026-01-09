@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<title>House of Consequences – Governance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background: #f2f2f4;
+  color: #111;
+}
+
+header {
+  background: #111;
+  color: #fff;
+  padding: 1.5rem 2rem;
+}
+
+header h1 {
+  margin: 0 0 .5rem 0;
+}
+
+header p {
+  margin: 0;
+  opacity: .9;
+}
+
+main {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.controls {
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: .6rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #333;
+}
+
+svg {
+  width: 100%;
+  height: 600px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+.node {
+  fill: #fafafa;
+  stroke: #333;
+  stroke-width: 1;
+}
+
+.node text {
+  font-size: 12px;
+  fill: #111;
+  pointer-events: none;
+}
+
+.edge {
+  stroke: #666;
+  stroke-width: 2;
+  fill: none;
+  marker-end: url(#arrow);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>House of Consequences – Governance</h1>
+  <p>Päätösketjujen rakenteellinen visualisointi (casebook)</p>
+</header>
+
+<main>
+
+  <div class="controls">
+    <button id="toggleView">🔁 Vaihda näkymä: Talo</button>
+  </div>
+
+  <svg id="viz" viewBox="0 0 1000 600">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L9,3 z" fill="#666" />
+      </marker>
+    </defs>
+  </svg>
+
+</main>
+
+<script>
+/* =========================
+   CASEBOOK DATA (DEMO)
+   ========================= */
+
+const casebook = {
+  title: "HUS Psykiatria – Hoitoviiveet",
+  lifecycle: [
+    { id: "trigger", label: "Trigger\nHoidon tarve tunnistetaan" },
+    { id: "interpretation", label: "Interpretation\nViive hyväksytään" },
+    { id: "decision", label: "Decision\nEi aloiteta hoitoa" },
+    { id: "immediate", label: "Immediate consequence\nOireiden paheneminen" },
+    { id: "recursive", label: "Recursive effect\nKriisikäynnit lisääntyvät" },
+    { id: "normalized", label: "Normalized state\nViive on normaali" }
+  ],
+  edges: [
+    ["trigger", "interpretation"],
+    ["interpretation", "decision"],
+    ["decision", "immediate"],
+    ["immediate", "recursive"],
+    ["recursive", "normalized"]
+  ]
+};
+
+let viewMode = "house"; // house | circle
+const svg = document.getElementById("viz");
+
+/* =========================
+   RENDER DISPATCHER
+   ========================= */
+
+function render() {
+  svg.innerHTML = svg.querySelector("defs").outerHTML;
+  if (viewMode === "house") renderHouse();
+  else renderCircle();
+}
+
+/* =========================
+   HOUSE VIEW
+   ========================= */
+
+function renderHouse() {
+  const x = 500;
+  const startY = 80;
+  const gap = 80;
+
+  const positions = {};
+
+  casebook.lifecycle.forEach((n, i) => {
+    const y = startY + i * gap;
+    positions[n.id] = { x, y };
+    drawNode(x, y, n.label);
+  });
+
+  casebook.edges.forEach(([a, b]) => {
+    drawEdge(positions[a], positions[b]);
+  });
+}
+
+/* =========================
+   CIRCLE VIEW
+   ========================= */
+
+function renderCircle() {
+  const cx = 500;
+  const cy = 300;
+  const r = 200;
+
+  const positions = {};
+
+  casebook.lifecycle.forEach((n, i) => {
+    const angle = (i / casebook.lifecycle.length) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    positions[n.id] = { x, y };
+    drawNode(x, y, n.label);
+  });
+
+  casebook.edges.forEach(([a, b]) => {
+    drawEdge(positions[a], positions[b]);
+  });
+}
+
+/* =========================
+   DRAW HELPERS
+   ========================= */
+
+function drawNode(x, y, label) {
+  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  rect.setAttribute("x", x - 110);
+  rect.setAttribute("y", y - 25);
+  rect.setAttribute("width", 220);
+  rect.setAttribute("height", 50);
+  rect.setAttribute("rx", 6);
+  rect.setAttribute("class", "node");
+
+  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute("x", x);
+  text.setAttribute("y", y);
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("dominant-baseline", "middle");
+
+  label.split("\n").forEach((line, i) => {
+    const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    tspan.setAttribute("x", x);
+    tspan.setAttribute("dy", i === 0 ? "0" : "1.1em");
+    tspan.textContent = line;
+    text.appendChild(tspan);
+  });
+
+  g.appendChild(rect);
+  g.appendChild(text);
+  svg.appendChild(g);
+}
+
+function drawEdge(a, b) {
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.setAttribute("x1", a.x);
+  line.setAttribute("y1", a.y + 25);
+  line.setAttribute("x2", b.x);
+  line.setAttribute("y2", b.y - 25);
+  line.setAttribute("class", "edge");
+  svg.appendChild(line);
+}
+
+/* =========================
+   TOGGLE
+   ========================= */
+
+document.getElementById("toggleView").addEventListener("click", () => {
+  viewMode = viewMode === "house" ? "circle" : "house";
+  document.getElementById("toggleView").textContent =
+    "🔁 Vaihda näkymä: " + (viewMode === "house" ? "Talo" : "Ympyrä");
+  render();
+});
+
+/* INIT */
+render();
+</script>
+<footer>
+        <p>© 2026 House of Consequences – Self-learning & autonomous memory</p>
+    </footer>
+
+</body>
+</html>
