@@ -1,24 +1,63 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from jsonschema import validate, ValidationError
 import json
 from pathlib import Path
 
 app = FastAPI(
-    title="House of Consequences Governance Engine",
-    version="0.1.0"
+    title="House of Consequences Governance API",
+    version="1.0.0",
+    description="Canonical Casebook validation engine"
 )
 
-# Ladataan Canonical Casebook -skeema muistiin
+# ─────────────────────────────────────────────
+# Load locked Canonical Casebook schema
+# ─────────────────────────────────────────────
+
 SCHEMA_PATH = Path(_file_).resolve().parent.parent / "schemas" / "casebook.schema.json"
 
-with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-    CASEBOOK_SCHEMA = json.load(f)
+try:
+    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+        CASEBOOK_SCHEMA = json.load(f)
+except Exception as e:
+    raise RuntimeError(f"Failed to load casebook schema: {e}")
 
+# ─────────────────────────────────────────────
+# Health check
+# ─────────────────────────────────────────────
 
-@app.get("/")
-def root():
+@app.get("/health")
+def health():
     return {
         "status": "ok",
-        "message": "Governance engine online",
-        "canonical_schema_loaded": True,
-        "schema_title": CASEBOOK_SCHEMA.get("title")
+        "engine": "House of Consequences Governance",
+        "schema_version": CASEBOOK_SCHEMA.get("version", "unknown")
     }
+
+# ─────────────────────────────────────────────
+# Canonical Casebook validation endpoint
+# ─────────────────────────────────────────────
+
+@app.post("/validate/casebook")
+def validate_casebook(casebook: dict):
+    try:
+        validate(instance=casebook, schema=CASEBOOK_SCHEMA)
+        return JSONResponse(
+            status_code=200,
+            content={
+                "valid": True,
+                "canonical": True,
+                "message": "Casebook is valid under Canonical Casebook v1.0"
+            }
+        )
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "valid": False,
+                "canonical": False,
+                "error": e.message,
+                "path": list(e.path),
+                "schema_path": list(e.schema_path)
+            }
+        )
