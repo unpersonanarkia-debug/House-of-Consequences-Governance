@@ -1,47 +1,176 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "canonical://casebook/schema/v1.0/casebook",
-  "title": "Canonical Casebook Schema v1.0",
-  "description": "Locked schema for House of Consequences Canonical Casebooks",
-
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://unpersonanarkia-debug.github.io/House-of-Consequences-Governance/governance/schemas/casebook.schema.json",
+  "title": "Canonical Casebook v1.0",
+  "description": "Lukittu JSON Schema v1.0 for House of Consequences Casebooks – defines structure for decision lifecycle, nodes, edges, PDCA and measurable learning objectives.",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "casebook_id",
-    "canonical",
-    "scope",
-    "meta",
-    "cases"
+    "instanssi",
+    "domain",
+    "period",
+    "decision_lifecycle",
+    "nodes",
+    "edges",
+    "pdca",
+    "learning_objectives"
   ],
-
   "properties": {
+
     "casebook_id": {
       "type": "string",
-      "pattern": "^CCB-[0-9]{3}$"
+      "description": "Unique canonical identifier (e.g., CCB-000, CCB-001...)."
     },
 
-    "canonical": {
-      "type": "boolean",
-      "const": true,
-      "description": "Canonical Casebooks must explicitly declare canonical=true"
-    },
-
-    "scope": {
+    "instanssi": {
       "type": "string",
-      "description": "Abstract scope of the casebook (e.g. governance, healthcare, geopolitics)"
+      "description": "Organization or instance name (e.g., 'HUS Psykiatria')."
     },
 
-    "meta": {
-      "$ref": "./canonical.meta.schema.json"
+    "domain": {
+      "type": "string",
+      "description": "Domain or theme (e.g., 'terveydenhuolto', 'koulutus')."
     },
 
-    "cases": {
+    "period": {
+      "type": "string",
+      "description": "Covered period (e.g., '2010–2025')."
+    },
+
+    "decision_lifecycle": {
+      "type": "object",
+      "description": "Six-stage decision lifecycle core model.",
+      "additionalProperties": false,
+      "required": [
+        "trigger",
+        "interpretation",
+        "decision",
+        "immediate_consequence",
+        "recursive_effect",
+        "normalized_state"
+      ],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "description": "Event or signal that initiates the lifecycle."
+        },
+        "interpretation": {
+          "type": "string",
+          "description": "How trigger is interpreted by stakeholders."
+        },
+        "decision": {
+          "type": "string",
+          "description": "Chosen action or policy."
+        },
+        "immediate_consequence": {
+          "type": "string",
+          "description": "Direct outcome of the decision."
+        },
+        "recursive_effect": {
+          "type": "string",
+          "description": "How the consequence feeds back into the system."
+        },
+        "normalized_state": {
+          "type": "string",
+          "description": "New normalized system state after effects."
+        }
+      }
+    },
+
+    "nodes": {
       "type": "array",
-      "minItems": 1,
+      "description": "Graph nodes describing key states in the consequence network.",
       "items": {
-        "$ref": "./case.schema.json"
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique node identifier."
+          },
+          "label": {
+            "type": "string",
+            "description": "Human readable node description."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["trigger", "action", "outcome", "feedback", "normalized_state"],
+            "description": "Node category."
+          }
+        }
+      }
+    },
+
+    "edges": {
+      "type": "array",
+      "description": "Connections between nodes (from-to).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" }
+        }
+      }
+    },
+
+    "pdca": {
+      "type": "object",
+      "description": "PDCA learning cycle artifact.",
+      "additionalProperties": false,
+      "required": ["plan", "do", "check", "act"],
+      "properties": {
+        "plan": { "type": "string" },
+        "do": { "type": "string" },
+        "check": { "type": "string" },
+        "act": { "type": "string" }
+      }
+    },
+
+    "learning_objectives": {
+      "type": "array",
+      "description": "Measurable objectives defined using SMART + Bloom.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "metrics"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Quantitative success criteria.",
+            "properties": {
+              "targetPercent": { "type": "number" },
+              "timeframeDays": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+
+    "metadata": {
+      "type": "object",
+      "description": "Optional extended metadata (tags, sources, authors).",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sources": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
       }
     }
-  },
 
-  "additionalProperties": false
+  }
 }
