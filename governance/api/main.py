@@ -33,7 +33,7 @@ def validate_evidence(data: dict):
 # Load locked Canonical Casebook schema
 # ─────────────────────────────────────────────
 
-SCHEMA_PATH = Path(_file_).resolve().parent.parent / "schemas" / "casebook.schema.json"
+SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schemas" / "casebook.schema.json"
 
 try:
     with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
