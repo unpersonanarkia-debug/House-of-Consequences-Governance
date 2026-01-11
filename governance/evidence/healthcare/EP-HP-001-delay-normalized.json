@@ -1,0 +1,117 @@
+{
+  "metadata": {
+    "case_id": "canonical-casebook-0-normalized-error",
+    "domain": "healthcare",
+    "version": "1.0.0",
+    "created_at": "2026-01-10T10:30:00Z",
+    "authors": [
+      "House of Consequences Governance"
+    ],
+    "data_sources": [
+      {
+        "provider": "THL",
+        "dataset": "Erikoissairaanhoidon hoitojonot",
+        "year": 2024
+      },
+      {
+        "provider": "Tilastokeskus",
+        "dataset": "Kuolemansyyt",
+        "year": 2024
+      },
+      {
+        "provider": "HUS",
+        "dataset": "Potilasturvallisuusraportit",
+        "year": 2023
+      }
+    ]
+  },
+
+  "scope": {
+    "population": "Aikuispotilaat erikoissairaanhoidossa, joiden hoitoonpääsyn viive ylittää 3 kuukautta",
+    "timeframe": {
+      "start_year": 2022,
+      "end_year": 2024
+    },
+    "exclusions": [
+      "Päivystyksellinen hoito",
+      "Lasten erikoissairaanhoito"
+    ]
+  },
+
+  "methods": [
+    {
+      "method_type": "cohort_comparison",
+      "description": "Potilaat jaettiin kolmeen kohorttiin hoitoonpääsyn viiveen mukaan (0–3 kk, 3–6 kk, >6 kk) ja tuloksia verrattiin.",
+      "controls": [
+        "ikä",
+        "sukupuoli",
+        "perussairaudet"
+      ],
+      "limitations": "Ei satunnaistettu asetelma; mahdollinen residuaalinen sekoittuminen."
+    },
+    {
+      "method_type": "regression_model",
+      "description": "Lineaarinen regressiomalli kuolleisuuden ja viivekuukausien välisestä yhteydestä.",
+      "controls": [
+        "ikä",
+        "komorbiditeetti-indeksi",
+        "alue"
+      ],
+      "limitations": "Olettaa lineaarisen vaikutuksen viivekuukausille."
+    },
+    {
+      "method_type": "cost_attribution",
+      "description": "Viiveen aiheuttamien lisähoitopäivien ja komplikaatioiden kustannuslaskenta."
+    }
+  ],
+
+  "findings": [
+    {
+      "metric": "1v kuolleisuus",
+      "baseline": 0.05,
+      "exposed": 0.22,
+      "unit": "%",
+      "confidence_interval": "95% CI"
+    },
+    {
+      "metric": "komplikaatio-osuus",
+      "baseline": 0.15,
+      "exposed": 0.47,
+      "unit": "%"
+    },
+    {
+      "metric": "keskimääräiset hoitopäivät",
+      "baseline": 7,
+      "exposed": 28,
+      "unit": "päivää"
+    }
+  ],
+
+  "attribution": {
+    "risk_difference": 0.17,
+    "hazard_ratio": 1.15,
+    "attributable_fraction": 0.58,
+    "economic_impact": {
+      "per_case_cost": 21000,
+      "annual_total_cost": 562000000,
+      "currency": "EUR"
+    }
+  },
+
+  "pdca_support": {
+    "plan_signal": "Resurssiperusteiset viiveperustelut kattavat valtaosan päätösasiakirjoista.",
+    "do_signal": "Viivekuukaudet korreloivat vahvasti komplikaatioiden ja hoitopäivien kasvun kanssa.",
+    "check_signal": "Yli 6kk odottajien osuus pysyy vakaasti yli 15% kolmen vuoden ajan.",
+    "act_leverage_points": [
+      "Kapasiteettipäätösten erottaminen priorisointiperusteluista",
+      "Automaattinen riskihälytys hoitoviiveen ylittäessä 3 kuukautta",
+      "Päivystyksen kuormituspuskurin purkaminen"
+    ]
+  },
+
+  "governance_assessment": {
+    "normalized_error_indicator": true,
+    "structural_risk_score": 0.92,
+    "notes": "Hoitoviive ei ilmene yksittäisenä poikkeamana vaan toistuvana ja hyväksyttynä toimintatilana usean vuoden ajalta."
+  }
+}

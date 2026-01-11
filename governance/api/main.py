@@ -1,14 +1,33 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from jsonschema import validate, ValidationError
-import json
-from pathlib import Path
+from governance.api.validators.evidence_pack import validate_evidence_pack
 
 app = FastAPI(
     title="House of Consequences Governance API",
     version="1.0.0",
-    description="Canonical Casebook validation engine"
+    description="Canonical validation layer for Evidence Packs and Casebooks"
 )
+
+@app.post("/validate/evidence-pack")
+def validate_evidence(data: dict):
+    """
+    Validates an Evidence Pack against the locked evidence.pack.schema.json
+    """
+    result = validate_evidence_pack(data)
+
+    if not result["valid"]:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "message": "Evidence Pack validation failed",
+                "errors": result["errors"]
+            }
+        )
+
+    return {
+        "status": "ok",
+        "message": "Evidence Pack is valid",
+        "canonical_compatible": True
+    }
 
 # ─────────────────────────────────────────────
 # Load locked Canonical Casebook schema
