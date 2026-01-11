@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://governance.house/schemas/evidence.pack.schema.json",
+  "title": "Governance Evidence Pack",
+  "description": "Evidence layer supporting House of Consequences governance cases. Contains empirical measurements, attribution models, and validation metadata without locking canonical narratives.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "scope",
+    "methods",
+    "findings",
+    "attribution",
+    "pdca_support"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["case_id", "domain", "version", "created_at"],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "description": "Identifier linking this evidence pack to a canonical casebook entry"
+        },
+        "domain": {
+          "type": "string",
+          "enum": ["healthcare", "education", "justice", "infrastructure", "social_services"]
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version of the evidence pack"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "data_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["provider", "dataset", "year"],
+            "properties": {
+              "provider": { "type": "string" },
+              "dataset": { "type": "string" },
+              "year": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+
+    "scope": {
+      "type": "object",
+      "required": ["population", "timeframe"],
+      "properties": {
+        "population": {
+          "type": "string",
+          "description": "Definition of affected population"
+        },
+        "timeframe": {
+          "type": "object",
+          "required": ["start_year", "end_year"],
+          "properties": {
+            "start_year": { "type": "integer" },
+            "end_year": { "type": "integer" }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "methods": {
+      "type": "array",
+      "description": "Analytical methods used to derive evidence",
+      "items": {
+        "type": "object",
+        "required": ["method_type", "description"],
+        "properties": {
+          "method_type": {
+            "type": "string",
+            "enum": [
+              "cohort_comparison",
+              "regression_model",
+              "hazard_model",
+              "excess_mortality",
+              "cost_attribution"
+            ]
+          },
+          "description": { "type": "string" },
+          "controls": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "limitations": {
+            "type": "string"
+          }
+        }
+      }
+    },
+
+    "findings": {
+      "type": "array",
+      "description": "Measured outcomes without normative interpretation",
+      "items": {
+        "type": "object",
+        "required": ["metric", "baseline", "exposed"],
+        "properties": {
+          "metric": {
+            "type": "string",
+            "description": "Outcome metric (e.g. 1-year mortality, complication rate)"
+          },
+          "baseline": {
+            "type": "number",
+            "description": "Observed value in non-exposed or minimal exposure group"
+          },
+          "exposed": {
+            "type": "number",
+            "description": "Observed value in exposed or delayed group"
+          },
+          "unit": {
+            "type": "string",
+            "example": "%"
+          },
+          "confidence_interval": {
+            "type": "string",
+            "description": "Optional CI notation"
+          }
+        }
+      }
+    },
+
+    "attribution": {
+      "type": "object",
+      "required": ["attributable_fraction"],
+      "properties": {
+        "risk_difference": {
+          "type": "number",
+          "description": "Absolute risk difference between exposed and baseline"
+        },
+        "hazard_ratio": {
+          "type": "number"
+        },
+        "attributable_fraction": {
+          "type": "number",
+          "description": "Fraction of outcome attributed to exposure (0–1)"
+        },
+        "economic_impact": {
+          "type": "object",
+          "properties": {
+            "per_case_cost": { "type": "number" },
+            "annual_total_cost": { "type": "number" },
+            "currency": { "type": "string", "example": "EUR" }
+          }
+        }
+      }
+    },
+
+    "pdca_support": {
+      "type": "object",
+      "description": "Evidence hooks for PDCA lifecycle validation",
+      "properties": {
+        "plan_signal": {
+          "type": "string",
+          "description": "Evidence indicating decision-point normalization"
+        },
+        "do_signal": {
+          "type": "string",
+          "description": "Evidence of recursive amplification"
+        },
+        "check_signal": {
+          "type": "string",
+          "description": "Evidence distinguishing systemic vs isolated cases"
+        },
+        "act_leverage_points": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "governance_assessment": {
+      "type": "object",
+      "description": "Non-binding structural interpretation",
+      "properties": {
+        "normalized_error_indicator": {
+          "type": "boolean"
+        },
+        "structural_risk_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
