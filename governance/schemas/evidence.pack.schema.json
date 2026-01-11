@@ -1,33 +1,46 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://governance.house/schemas/evidence.pack.schema.json",
-  "title": "Governance Evidence Pack",
-  "description": "Evidence layer supporting House of Consequences governance cases. Contains empirical measurements, attribution models, and validation metadata without locking canonical narratives.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "canonical://house-of-consequences/schema/evidence-pack/v1.0",
+  "title": "Evidence Pack Schema v1.0",
+  "description": "Locked schema for validated evidence packages supporting Canonical Casebook cases in House of Consequences Governance.",
   "type": "object",
+  "additionalProperties": false,
+
   "required": [
     "metadata",
     "scope",
     "methods",
     "findings",
     "attribution",
-    "pdca_support"
+    "pdca_support",
+    "governance_assessment"
   ],
+
   "properties": {
     "metadata": {
       "type": "object",
-      "required": ["case_id", "domain", "version", "created_at"],
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "domain",
+        "version",
+        "created_at",
+        "authors",
+        "data_sources"
+      ],
       "properties": {
         "case_id": {
           "type": "string",
-          "description": "Identifier linking this evidence pack to a canonical casebook entry"
+          "description": "Canonical Casebook case identifier this evidence supports."
         },
         "domain": {
           "type": "string",
-          "enum": ["healthcare", "education", "justice", "infrastructure", "social_services"]
+          "description": "Sector or domain of the case (e.g. healthcare, finance, justice)."
         },
         "version": {
           "type": "string",
-          "description": "Semantic version of the evidence pack"
+          "pattern": "^1\\.0\\.0$",
+          "description": "Locked schema version."
         },
         "created_at": {
           "type": "string",
@@ -35,12 +48,15 @@
         },
         "authors": {
           "type": "array",
+          "minItems": 1,
           "items": { "type": "string" }
         },
         "data_sources": {
           "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["provider", "dataset", "year"],
             "properties": {
               "provider": { "type": "string" },
@@ -54,14 +70,13 @@
 
     "scope": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["population", "timeframe"],
       "properties": {
-        "population": {
-          "type": "string",
-          "description": "Definition of affected population"
-        },
+        "population": { "type": "string" },
         "timeframe": {
           "type": "object",
+          "additionalProperties": false,
           "required": ["start_year", "end_year"],
           "properties": {
             "start_year": { "type": "integer" },
@@ -77,9 +92,10 @@
 
     "methods": {
       "type": "array",
-      "description": "Analytical methods used to derive evidence",
+      "minItems": 1,
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": ["method_type", "description"],
         "properties": {
           "method_type": {
@@ -87,7 +103,6 @@
             "enum": [
               "cohort_comparison",
               "regression_model",
-              "hazard_model",
               "excess_mortality",
               "cost_attribution"
             ]
@@ -97,65 +112,44 @@
             "type": "array",
             "items": { "type": "string" }
           },
-          "limitations": {
-            "type": "string"
-          }
+          "limitations": { "type": "string" }
         }
       }
     },
 
     "findings": {
       "type": "array",
-      "description": "Measured outcomes without normative interpretation",
+      "minItems": 1,
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": ["metric", "baseline", "exposed"],
         "properties": {
-          "metric": {
-            "type": "string",
-            "description": "Outcome metric (e.g. 1-year mortality, complication rate)"
-          },
-          "baseline": {
-            "type": "number",
-            "description": "Observed value in non-exposed or minimal exposure group"
-          },
-          "exposed": {
-            "type": "number",
-            "description": "Observed value in exposed or delayed group"
-          },
-          "unit": {
-            "type": "string",
-            "example": "%"
-          },
-          "confidence_interval": {
-            "type": "string",
-            "description": "Optional CI notation"
-          }
+          "metric": { "type": "string" },
+          "baseline": { "type": "number" },
+          "exposed": { "type": "number" },
+          "unit": { "type": "string" },
+          "confidence_interval": { "type": "string" }
         }
       }
     },
 
     "attribution": {
       "type": "object",
-      "required": ["attributable_fraction"],
+      "additionalProperties": false,
+      "required": ["risk_difference"],
       "properties": {
-        "risk_difference": {
-          "type": "number",
-          "description": "Absolute risk difference between exposed and baseline"
-        },
-        "hazard_ratio": {
-          "type": "number"
-        },
-        "attributable_fraction": {
-          "type": "number",
-          "description": "Fraction of outcome attributed to exposure (0–1)"
-        },
+        "risk_difference": { "type": "number" },
+        "hazard_ratio": { "type": "number" },
+        "attributable_fraction": { "type": "number" },
         "economic_impact": {
           "type": "object",
+          "additionalProperties": false,
+          "required": ["per_case_cost", "annual_total_cost", "currency"],
           "properties": {
             "per_case_cost": { "type": "number" },
             "annual_total_cost": { "type": "number" },
-            "currency": { "type": "string", "example": "EUR" }
+            "currency": { "type": "string" }
           }
         }
       }
@@ -163,20 +157,12 @@
 
     "pdca_support": {
       "type": "object",
-      "description": "Evidence hooks for PDCA lifecycle validation",
+      "additionalProperties": false,
+      "required": ["plan_signal", "do_signal", "check_signal"],
       "properties": {
-        "plan_signal": {
-          "type": "string",
-          "description": "Evidence indicating decision-point normalization"
-        },
-        "do_signal": {
-          "type": "string",
-          "description": "Evidence of recursive amplification"
-        },
-        "check_signal": {
-          "type": "string",
-          "description": "Evidence distinguishing systemic vs isolated cases"
-        },
+        "plan_signal": { "type": "string" },
+        "do_signal": { "type": "string" },
+        "check_signal": { "type": "string" },
         "act_leverage_points": {
           "type": "array",
           "items": { "type": "string" }
@@ -186,19 +172,16 @@
 
     "governance_assessment": {
       "type": "object",
-      "description": "Non-binding structural interpretation",
+      "additionalProperties": false,
+      "required": ["normalized_error_indicator", "structural_risk_score"],
       "properties": {
-        "normalized_error_indicator": {
-          "type": "boolean"
-        },
+        "normalized_error_indicator": { "type": "boolean" },
         "structural_risk_score": {
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
-        "notes": {
-          "type": "string"
-        }
+        "notes": { "type": "string" }
       }
     }
   }
