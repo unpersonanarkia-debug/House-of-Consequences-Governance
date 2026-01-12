@@ -96,3 +96,7 @@ House of Consequences Governance operates on a canonical casebook system.
 
 The authoritative definition of a Canonical Casebook is established in:
 → CANONICAL_CASEBOOK.md
+
+
+
+
