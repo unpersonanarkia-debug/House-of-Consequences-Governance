@@ -1,249 +1,241 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-<meta charset="UTF-8" />
-<title>House of Consequences – Governance</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  background: #f2f2f4;
-  color: #111;
-}
-
-header {
-  background: #111;
-  color: #fff;
-  padding: 1.5rem 2rem;
-}
-
-header h1 {
-  margin: 0 0 .5rem 0;
-}
-
-header p {
-  margin: 0;
-  opacity: .9;
-}
-
-main {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.controls {
-  margin-bottom: 1rem;
-}
-
-button {
-  padding: .6rem 1rem;
-  border: none;
-  border-radius: 4px;
-  background: #111;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #333;
-}
-
-svg {
-  width: 100%;
-  height: 600px;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.1);
-}
-
-.node {
-  fill: #fafafa;
-  stroke: #333;
-  stroke-width: 1;
-}
-
-.node text {
-  font-size: 12px;
-  fill: #111;
-  pointer-events: none;
-}
-
-.edge {
-  stroke: #666;
-  stroke-width: 2;
-  fill: none;
-  marker-end: url(#arrow);
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>House of Consequences Governance v1.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .phase { transition: all 0.3s ease; }
+    .phase.trigger { border-left: 6px solid #ef4444; }
+    .phase.interpretation { border-left: 6px solid #f59e0b; }
+    .phase.decision { border-left: 6px solid #10b981; }
+    .phase.immediate_consequence { border-left: 6px solid #3b82f6; }
+    .phase.recursive_effect { border-left: 6px solid #8b5cf6; }
+    .phase.normalized_state { border-left: 6px solid #6b7280; }
+    .pdca-active { box-shadow: 0 0 20px rgba(59,130,246,0.5); }
+  </style>
 </head>
+<body class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+        🏛️ House of Consequences
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        Instrumentti, joka tekee vallankäytön näkyväksi ilman väitteitä
+      </p>
+      <div class="bg-white rounded-xl shadow-lg p-8 border-4 border-gray-100">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">🧱 Thematic Pilot Casebook #1</h2>
+        <div class="text-lg text-gray-700">
+          <strong>Healthcare Consequences House</strong><br>
+          <span class="text-sm text-gray-500">"Viiveestä normiksi"</span>
+        </div>
+      </div>
+    </header>
 
-<body>
+    <!-- Evidence Pack -->
+    <div id="evidence-pack" class="bg-white rounded-2xl shadow-2xl p-8 mb-12 border-4 border-blue-50">
+      <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+        📊 Evidence Pack v1.0
+        <span class="ml-4 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">VALID</span>
+      </h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border">
+          <h4 class="font-semibold text-red-800 mb-2">Structural Risk</h4>
+          <div class="text-3xl font-bold text-red-600">0.92</div>
+        </div>
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border">
+          <h4 class="font-semibold text-orange-800 mb-2">Canonical Pattern</h4>
+          <div class="text-lg font-bold text-orange-700">emergency_permanence</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border">
+          <h4 class="font-semibold text-green-800 mb-2">Economic Impact</h4>
+          <div class="text-2xl font-bold text-green-600">562M€/vuosi</div>
+        </div>
+      </div>
 
-<header>
-  <h1>House of Consequences – Governance</h1>
-  <p>Päätösketjujen rakenteellinen visualisointi (casebook)</p>
-</header>
+      <!-- PDCA Progress -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="pdca-card p-4 bg-blue-50 rounded-lg text-center pdca-active">
+          <div class="text-sm font-medium text-blue-700">PLAN</div>
+          <div class="text-2xl font-bold text-blue-900">85%</div>
+        </div>
+        <div class="pdca-card p-4 bg-green-50 rounded-lg text-center">
+          <div class="text-sm font-medium text-green-700">DO</div>
+          <div class="text-2xl font-bold text-green-900">92%</div>
+        </div>
+        <div class="pdca-card p-4 bg-yellow-50 rounded-lg text-center">
+          <div class="text-sm font-medium text-yellow-700">CHECK</div>
+          <div class="text-2xl font-bold text-yellow-900">45%</div>
+        </div>
+        <div class="pdca-card p-4 bg-purple-50 rounded-lg text-center">
+          <div class="text-sm font-medium text-purple-700">ACT</div>
+          <div class="text-2xl font-bold text-purple-900">0%</div>
+        </div>
+      </div>
+    </div>
 
-<main>
+    <!-- Lifecycle Visualization -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 mb-12 border-4 border-indigo-50">
+      <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">🔄 Päätöksen elinkaari</h3>
+      
+      <div class="lifecycle-container max-w-4xl mx-auto space-y-4">
+        <div class="phase trigger p-6 rounded-xl bg-gradient-to-r from-red-50 to-red-100 border-l-8 border-red-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">1</div>
+            <h4 class="font-semibold text-xl text-red-900">TRIGGER</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Kasvava hoitojono erikoissairaanhoidossa<br>
+            <span class="font-bold text-red-800">26 790 potilasta >6kk (17%)</span>
+          </p>
+        </div>
 
-  <div class="controls">
-    <button id="toggleView">🔁 Vaihda näkymä: Talo</button>
+        <div class="phase interpretation p-6 rounded-xl bg-gradient-to-r from-orange-50 to-orange-100 border-l-8 border-orange-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">2</div>
+            <h4 class="font-semibold text-xl text-orange-900">INTERPRETATION</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Tilanne tulkitaan resurssiongelmaksi<br>
+            <span class="font-bold text-orange-800">"rajoitetut resurssit" (87% perusteluista)</span>
+          </p>
+        </div>
+
+        <div class="phase decision p-6 rounded-xl bg-gradient-to-r from-green-50 to-green-100 border-l-8 border-green-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">3</div>
+            <h4 class="font-semibold text-xl text-green-900">DECISION</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Ei rakenteellista muutosta<br>
+            <span class="font-bold text-green-800">Kapasiteetti-investoinnit: ❌</span>
+          </p>
+        </div>
+
+        <div class="phase immediate_consequence p-6 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border-l-8 border-blue-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">4</div>
+            <h4 class="font-semibold text-xl text-blue-900">IMMEDIATE</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Hoidot myöhässä, oireet pahenevat<br>
+            <span class="font-bold text-blue-800">Komplikaatiot +47%</span>
+          </p>
+        </div>
+
+        <div class="phase recursive_effect p-6 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100 border-l-8 border-purple-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">5</div>
+            <h4 class="font-semibold text-xl text-purple-900">RECURSIVE</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Pahentuneet tapaukset ruokkivat jonoa<br>
+            <span class="font-bold text-purple-800">Vahvistussilmukka ×2.8</span>
+          </p>
+        </div>
+
+        <div class="phase normalized_state p-6 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 border-l-8 border-gray-400 shadow-lg">
+          <div class="flex items-center mb-3">
+            <div class="w-12 h-12 bg-gray-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">6</div>
+            <h4 class="font-semibold text-xl text-gray-900">NORMALIZED</h4>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            Viive = lähtöoletus<br>
+            <span class="font-bold text-gray-800">"Näin tämä toimii"</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-gray-100">
+        <h4 class="font-semibold text-gray-700 mb-2">Risk Difference</h4>
+        <div class="text-3xl font-bold text-red-600">+22%</div>
+        <p class="text-sm text-gray-500 mt-2">Kuolleisuusriski</p>
+      </div>
+      <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-gray-100">
+        <h4 class="font-semibold text-gray-700 mb-2">Hazard Ratio</h4>
+        <div class="text-3xl font-bold text-orange-600">1.15/kk</div>
+        <p class="text-sm text-gray-500 mt-2">Viivekuukausi</p>
+      </div>
+      <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-gray-100">
+        <h4 class="font-semibold text-gray-700 mb-2">Attributable Fraction</h4>
+        <div class="text-3xl font-bold text-blue-600">58%</div>
+        <p class="text-sm text-gray-500 mt-2">Viiveen osuus</p>
+      </div>
+      <div class="bg-white p-8 rounded-2xl shadow-lg border-2 border-gray-100">
+        <h4 class="font-semibold text-gray-700 mb-2">Porsaanreikä</h4>
+        <div class="text-lg font-bold text-gray-800 italic">"Resurssit rajalliset"</div>
+      </div>
+    </div>
+
+    <!-- ACT Recommendations -->
+    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 border-4 border-indigo-100">
+      <h3 class="text-2xl font-bold text-gray-900 mb-6">⚡ ACT: Katkaisupisteet</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow">
+          <h4 class="font-semibold text-indigo-800 mb-3">1. Interpretation</h4>
+          <p class="text-gray-700 mb-4">Resurssi vs. rakenne -koulutus</p>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-indigo-500 h-2 rounded-full" style="width: 60%"></div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow">
+          <h4 class="font-semibold text-green-800 mb-3">2. Decision</h4>
+          <p class="text-gray-700 mb-4">Kapasiteetti-investoinnit</p>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full" style="width: 40%"></div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow">
+          <h4 class="font-semibold text-purple-800 mb-3">3. Recursive</h4>
+          <p class="text-gray-700 mb-4">Päivystys pusku estettävä</p>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-purple-500 h-2 rounded-full" style="width: 20%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-gray-500 text-sm pt-12 border-t border-gray-200">
+      <p>House of Consequences Governance Prototype v1.0</p>
+      <p class="mt-2">Instrumentti, ei narratiivi. Data, ei väitteet.</p>
+    </footer>
   </div>
 
-  <svg id="viz" viewBox="0 0 1000 600">
-    <defs>
-      <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L9,3 z" fill="#666" />
-      </marker>
-    </defs>
-  </svg>
+  <script>
+    // PDCA progress animation
+    document.addEventListener('DOMContentLoaded', () => {
+      const pdcaCards = document.querySelectorAll('.pdca-card');
+      pdcaCards.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add('pdca-active');
+        }, index * 200);
+      });
 
-</main>
+      // Phase hover effects
+      document.querySelectorAll('.phase').forEach(phase => {
+        phase.addEventListener('mouseenter', () => {
+          phase.style.transform = 'scale(1.02)';
+          phase.style.zIndex = '10';
+        });
+        phase.addEventListener('mouseleave', () => {
+          phase.style.transform = 'scale(1)';
+          phase.style.zIndex = '1';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
 
-<script>
-/* =========================
-   CASEBOOK DATA (DEMO)
-   ========================= */
-
-const casebook = {
-  title: "HUS Psykiatria – Hoitoviiveet",
-  lifecycle: [
-    { id: "trigger", label: "Trigger\nHoidon tarve tunnistetaan" },
-    { id: "interpretation", label: "Interpretation\nViive hyväksytään" },
-    { id: "decision", label: "Decision\nEi aloiteta hoitoa" },
-    { id: "immediate", label: "Immediate consequence\nOireiden paheneminen" },
-    { id: "recursive", label: "Recursive effect\nKriisikäynnit lisääntyvät" },
-    { id: "normalized", label: "Normalized state\nViive on normaali" }
-  ],
-  edges: [
-    ["trigger", "interpretation"],
-    ["interpretation", "decision"],
-    ["decision", "immediate"],
-    ["immediate", "recursive"],
-    ["recursive", "normalized"]
-  ]
-};
-
-let viewMode = "house"; // house | circle
-const svg = document.getElementById("viz");
-
-/* =========================
-   RENDER DISPATCHER
-   ========================= */
-
-function render() {
-  svg.innerHTML = svg.querySelector("defs").outerHTML;
-  if (viewMode === "house") renderHouse();
-  else renderCircle();
-}
-
-/* =========================
-   HOUSE VIEW
-   ========================= */
-
-function renderHouse() {
-  const x = 500;
-  const startY = 80;
-  const gap = 80;
-
-  const positions = {};
-
-  casebook.lifecycle.forEach((n, i) => {
-    const y = startY + i * gap;
-    positions[n.id] = { x, y };
-    drawNode(x, y, n.label);
-  });
-
-  casebook.edges.forEach(([a, b]) => {
-    drawEdge(positions[a], positions[b]);
-  });
-}
-
-/* =========================
-   CIRCLE VIEW
-   ========================= */
-
-function renderCircle() {
-  const cx = 500;
-  const cy = 300;
-  const r = 200;
-
-  const positions = {};
-
-  casebook.lifecycle.forEach((n, i) => {
-    const angle = (i / casebook.lifecycle.length) * Math.PI * 2 - Math.PI / 2;
-    const x = cx + Math.cos(angle) * r;
-    const y = cy + Math.sin(angle) * r;
-    positions[n.id] = { x, y };
-    drawNode(x, y, n.label);
-  });
-
-  casebook.edges.forEach(([a, b]) => {
-    drawEdge(positions[a], positions[b]);
-  });
-}
-
-/* =========================
-   DRAW HELPERS
-   ========================= */
-
-function drawNode(x, y, label) {
-  const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-
-  const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-  rect.setAttribute("x", x - 110);
-  rect.setAttribute("y", y - 25);
-  rect.setAttribute("width", 220);
-  rect.setAttribute("height", 50);
-  rect.setAttribute("rx", 6);
-  rect.setAttribute("class", "node");
-
-  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  text.setAttribute("x", x);
-  text.setAttribute("y", y);
-  text.setAttribute("text-anchor", "middle");
-  text.setAttribute("dominant-baseline", "middle");
-
-  label.split("\n").forEach((line, i) => {
-    const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
-    tspan.setAttribute("x", x);
-    tspan.setAttribute("dy", i === 0 ? "0" : "1.1em");
-    tspan.textContent = line;
-    text.appendChild(tspan);
-  });
-
-  g.appendChild(rect);
-  g.appendChild(text);
-  svg.appendChild(g);
-}
-
-function drawEdge(a, b) {
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  line.setAttribute("x1", a.x);
-  line.setAttribute("y1", a.y + 25);
-  line.setAttribute("x2", b.x);
-  line.setAttribute("y2", b.y - 25);
-  line.setAttribute("class", "edge");
-  svg.appendChild(line);
-}
-
-/* =========================
-   TOGGLE
-   ========================= */
-
-document.getElementById("toggleView").addEventListener("click", () => {
-  viewMode = viewMode === "house" ? "circle" : "house";
-  document.getElementById("toggleView").textContent =
-    "🔁 Vaihda näkymä: " + (viewMode === "house" ? "Talo" : "Ympyrä");
-  render();
-});
-
-/* INIT */
-render();
-</script>
 <footer>
         <p>© 2026 House of Consequences – Self-learning & autonomous memory</p>
     </footer>
