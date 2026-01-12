@@ -1,0 +1,18 @@
+{
+  "name": "house-of-consequences-governance",
+  "version": "1.0.0",
+  "description": "Instrumentti joka tekee vallankäytön rakenteet näkyviksi",
+  "main": "engine/validator.js",
+  "scripts": {
+    "validate": "node engine/validator.js",
+    "test": "npm run validate",
+    "serve": "npx serve . -p 3000",
+    "dev": "concurrently \"npm run validate\" \"npm run serve\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "concurrently": "^8.2.2"
+  },
+  "type": "module"
+}
