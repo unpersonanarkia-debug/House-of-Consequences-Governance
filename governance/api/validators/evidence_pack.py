@@ -2,7 +2,7 @@ import json
 from jsonschema import Draft7Validator
 from pathlib import Path
 
-SCHEMA_PATH = Path(_file_).resolve().parents[3] / "governance" / "schemas" / "evidence.pack.schema.json"
+SCHEMA_PATH = Path(__file__).resolve().parents[3] / "governance" / "schemas" / "evidence.pack.schema.json"
 
 
 def validate_evidence_pack(data: dict) -> dict:
