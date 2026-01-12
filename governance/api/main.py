@@ -1,5 +1,9 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from governance.api.validators.evidence_pack import validate_evidence_pack
+from jsonschema import validate, ValidationError
+import json
+from pathlib import Path
 
 app = FastAPI(
     title="House of Consequences Governance API",
@@ -35,19 +39,19 @@ def validate_evidence(data: dict):
 
 SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schemas" / "casebook.schema.json"
 
-try:
-    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-        CASEBOOK_SCHEMA = json.load(f)
-except Exception as e:
-    raise RuntimeError(f"Failed to load casebook schema: {e}")
+        )
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "valid": False,
+                "canonical": False,
+                "error": e.message,
+                "path": list(e.path),
+                "schema_path": list(e.schema_path)
+            }
+        )
 
-# ─────────────────────────────────────────────
-# Health check
-# ─────────────────────────────────────────────
-
-@app.get("/health")
-def health():
-    return {
         "status": "ok",
         "engine": "House of Consequences Governance",
         "schema_version": CASEBOOK_SCHEMA.get("version", "unknown")
