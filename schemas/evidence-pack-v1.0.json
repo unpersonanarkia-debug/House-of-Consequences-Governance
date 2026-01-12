@@ -1,0 +1,281 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "canonical://house-of-consequences/evidence-pack/v1.0",
+  "title": "House of Consequences Evidence Pack Schema v1.0",
+  "description": "Governance-ready evidence structure for decision lifecycle analysis. Maps empirical findings to Canonical Casebook patterns.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "scope", 
+    "lifecycle_evidence",
+    "methods",
+    "findings",
+    "attribution",
+    "pdca_support",
+    "governance_assessment"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["case_id", "domain", "version", "created_at", "authors"],
+      "properties": {
+        "case_id": { 
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+/[a-z0-9_-]+/[0-9]+$"
+        },
+        "domain": { 
+          "type": "string",
+          "enum": ["terveydenhuolto", "lastensuojelu", "talous", "oikeuslaitos", "koulutus", "geopolitiikka"]
+        },
+        "version": { 
+          "type": "string", 
+          "pattern": "^v[1-9]\\d*\\.[0-9]+\\.[0-9]+(-[a-z0-9]+(\\.[a-z0-9]+)*)?(\\+[a-z0-9]+(\\.[a-z0-9]+)*)?$"
+        },
+        "created_at": { 
+          "type": "string", 
+          "format": "date-time" 
+        },
+        "authors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "maxItems": 5
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["population", "timeframe", "geography"],
+      "properties": {
+        "population": { 
+          "type": "string",
+          "description": "Affected population or system scope"
+        },
+        "timeframe": {
+          "type": "object",
+          "required": ["start_year", "end_year"],
+          "properties": {
+            "start_year": { "type": "integer", "minimum": 2000, "maximum": 2026 },
+            "end_year": { "type": "integer", "minimum": 2000, "maximum": 2026 }
+          }
+        },
+        "geography": {
+          "type": "string",
+          "enum": ["Suomi", "HUS", "Helsinki", "Pohjois-Savo", "Kymenlaakso"]
+        }
+      }
+    },
+    "lifecycle_evidence": {
+      "type": "object",
+      "required": [
+        "trigger",
+        "interpretation", 
+        "decision",
+        "immediate_consequence",
+        "recursive_effect",
+        "normalized_state"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "trigger": {
+          "type": "object",
+          "required": ["description", "metric"],
+          "properties": {
+            "description": { "type": "string" },
+            "metric": { "type": "number" }
+          }
+        },
+        "interpretation": {
+          "type": "object",
+          "required": ["description", "justification_type"],
+          "properties": {
+            "description": { "type": "string" },
+            "justification_type": {
+              "type": "string",
+              "enum": ["resources_limited", "prioritization_needed", "medical_necessity", "procedural"]
+            }
+          }
+        },
+        "decision": {
+          "type": "object",
+          "required": ["description", "structural_change"],
+          "properties": {
+            "description": { "type": "string" },
+            "structural_change": { "type": "boolean" }
+          }
+        },
+        "immediate_consequence": {
+          "type": "object",
+          "required": ["description", "metric"],
+          "properties": {
+            "description": { "type": "string" },
+            "metric": { "type": "number" }
+          }
+        },
+        "recursive_effect": {
+          "type": "object",
+          "required": ["description", "amplification_factor"],
+          "properties": {
+            "description": { "type": "string" },
+            "amplification_factor": { "type": "number", "minimum": 1.0 }
+          }
+        },
+        "normalized_state": {
+          "type": "object",
+          "required": ["description", "new_normal_metric"],
+          "properties": {
+            "description": { "type": "string" },
+            "new_normal_metric": { "type": "number" }
+          }
+        }
+      }
+    },
+    "methods": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["method_type", "description", "confidence"],
+        "properties": {
+          "method_type": {
+            "type": "string",
+            "enum": [
+              "cohort_comparison",
+              "regression_model", 
+              "cost_attribution",
+              "survival_analysis",
+              "system_dynamics"
+            ]
+          },
+          "description": { "type": "string", "maxLength": 500 },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["metric", "baseline", "exposed", "confidence_interval"],
+        "properties": {
+          "metric": { 
+            "type": "string",
+            "pattern": "^[a-z0-9_.-]+$" 
+          },
+          "baseline": { "type": "number" },
+          "exposed": { "type": "number" },
+          "confidence_interval": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "p_value": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "required": [
+        "risk_difference",
+        "hazard_ratio", 
+        "attributable_fraction",
+        "economic_impact"
+      ],
+      "properties": {
+        "risk_difference": { 
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1 
+        },
+        "hazard_ratio": { 
+          "type": "number",
+          "minimum": 0 
+        },
+        "attributable_fraction": { 
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1 
+        },
+        "economic_impact": {
+          "type": "object",
+          "required": ["annual_total_cost", "currency", "per_case_cost"],
+          "properties": {
+            "annual_total_cost": { "type": "number" },
+            "per_case_cost": { "type": "number" },
+            "currency": { 
+              "type": "string", 
+              "enum": ["EUR"] 
+            }
+          }
+        }
+      }
+    },
+    "pdca_support": {
+      "type": "object",
+      "required": [
+        "plan_signal",
+        "do_signal", 
+        "check_signal",
+        "act_leverage_points"
+      ],
+      "properties": {
+        "plan_signal": { 
+          "type": "string",
+          "maxLength": 200 
+        },
+        "do_signal": { 
+          "type": "string",
+          "maxLength": 200 
+        },
+        "check_signal": { 
+          "type": "string",
+          "maxLength": 200 
+        },
+        "act_leverage_points": {
+          "type": "array",
+          "items": { 
+            "type": "string",
+            "maxLength": 100 
+          },
+          "minItems": 1,
+          "maxItems": 5
+        }
+      }
+    },
+    "governance_assessment": {
+      "type": "object",
+      "required": [
+        "structural_risk_score",
+        "canonical_pattern",
+        "loophole_identified"
+      ],
+      "properties": {
+        "structural_risk_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "multipleOf": 0.01
+        },
+        "canonical_pattern": {
+          "type": "string",
+          "enum": [
+            "emergency_permanence",
+            "diffuse_responsibility", 
+            "necessity_overrides_values",
+            "metrics_become_reality",
+            "language_reframes_accountability"
+          ]
+        },
+        "loophole_identified": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
