@@ -1,0 +1,82 @@
+{
+  "$schema": "canonical://house-of-consequences/evidence-pack/v1.0",
+  "metadata": {
+    "case_id": "terveydenhuolto/viive_normiksi/001",
+    "domain": "terveydenhuolto",
+    "version": "v1.0.0",
+    "created_at": "2026-01-12T02:22:00Z",
+    "authors": ["governance-analyst"]
+  },
+  "scope": {
+    "population": "Erikoissairaanhoidon jonottajat",
+    "timeframe": {"start_year": 2020, "end_year": 2025},
+    "geography": "Suomi"
+  },
+  "lifecycle_evidence": {
+    "trigger": {
+      "description": "Kasvava hoitojono erikoissairaanhoidossa",
+      "metric": 26790
+    },
+    "interpretation": {
+      "description": "Tilanne tulkitaan resurssiongelmaksi",
+      "justification_type": "resources_limited"
+    },
+    "decision": {
+      "description": "Ei kapasiteetin merkittävää lisäämistä",
+      "structural_change": false
+    },
+    "immediate_consequence": {
+      "description": "Hoidot alkavat myöhässä, oireet pahenevat",
+      "metric": 0.47
+    },
+    "recursive_effect": {
+      "description": "Pahentuneet tapaukset vievät enemmän resursseja",
+      "amplification_factor": 2.8
+    },
+    "normalized_state": {
+      "description": "Viive lähtöoletus, 'näin tämä toimii'",
+      "new_normal_metric": 0.17
+    }
+  },
+  "methods": [
+    {
+      "method_type": "cohort_comparison",
+      "description": "0-3kk vs >6kk hoitoajat: komplikaatiot ja kuolleisuus",
+      "confidence": 0.95
+    }
+  ],
+  "findings": [
+    {
+      "metric": "yli_6kk_jono_osuus",
+      "baseline": 0.05,
+      "exposed": 0.17,
+      "confidence_interval": [0.15, 0.19],
+      "p_value": 0.0001
+    }
+  ],
+  "attribution": {
+    "risk_difference": 0.22,
+    "hazard_ratio": 1.15,
+    "attributable_fraction": 0.58,
+    "economic_impact": {
+      "annual_total_cost": 562000000,
+      "per_case_cost": 21000,
+      "currency": "EUR"
+    }
+  },
+  "pdca_support": {
+    "plan_signal": "Resurssiperusteisten perustelujen osuus 87%",
+    "do_signal": "Viive/komplikaatio korrelaatio r=0.78",
+    "check_signal": ">15% >6kk odottajat vakio 3v",
+    "act_leverage_points": [
+      "Interpretation: Resurssi vs. rakenne",
+      "Decision: Kapasiteetti-investoinnit",
+      "Recursive: Päivystys pusku"
+    ]
+  },
+  "governance_assessment": {
+    "structural_risk_score": 0.92,
+    "canonical_pattern": "emergency_permanence",
+    "loophole_identified": "Koska resurssit ovat rajalliset, tämä ei ole kenenkään virhe"
+  }
+}
